@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
+import fotoGlam1 from './assets/foto-glam1.jpeg';
+import fotoGlam2 from './assets/foto-glam2.jpeg';
+import fotoGlam3 from './assets/foto-glam3.jpeg';
 
 interface GuestState {
   rooms: number;
@@ -17,14 +20,121 @@ const TABS = [
 const LISTINGS = [
   {
     id: 1,
-    title: 'Glamping Lubito',
+    title: 'Alojamiento por Noche',
     location: 'El Retiro · Antioquia',
     rating: 5.0,
     reviews: 142,
     category: 'Excelente',
-    price: '$450.000',
-    tags: ['Jacuzzi Privado', 'Desayuno', 'Naturaleza', 'Malla Catamarán'],
-    img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=85',
+    price: '$200.000',
+    priceUnit: '/ noche',
+    tags: ['Jacuzzi Privado', 'Cocina', 'Zona BBQ', 'Pet Friendly 🐾'],
+    img: fotoGlam1,
+    details: {
+      ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
+      incluye: [
+        'Cama doble cómoda',
+        'Jacuzzi privado',
+        'Cocina equipada y nevera',
+        'Baño privado con agua caliente',
+        'Zona BBQ y fogata',
+        'Iluminación cálida',
+        'Espacio pet friendly 🐾'
+      ],
+      tarifasParejas: [
+        { label: 'Noche fin de semana (viernes, sábado o domingo)', price: '$260.000' },
+        { label: 'Noche entre semana (lunes, martes, miércoles o jueves)', price: '$200.000' }
+      ],
+      estanciaOcasional: [],
+      momentoRapido: [],
+      hasta4Personas: [
+        { label: 'Fin de semana', price: '$380.000' },
+        { label: 'Entre semana', price: '$320.000' }
+      ],
+      horarios: 'Check-in: 3:00 p.m. | Check-out: 1:00 p.m.',
+      nota: '💦 Jacuzzi incluido en todas las noches.'
+    }
+  },
+  {
+    id: 2,
+    title: 'Estancia Ocasional',
+    location: 'El Retiro · Antioquia',
+    rating: 5.0,
+    reviews: 89,
+    category: 'Escapada',
+    price: '$160.000',
+    priceUnit: '/ 6 horas',
+    tags: ['Jacuzzi Incluido', '6 Horas', 'Relajación Total', 'Privacidad'],
+    img: fotoGlam2,
+    details: {
+      ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
+      incluye: [
+        'Cama doble cómoda',
+        'Jacuzzi privado',
+        'Baño privado con agua caliente',
+        'Privacidad y tranquilidad',
+      ],
+      tarifasParejas: [],
+      hasta4Personas: [],
+      estanciaOcasional: [
+        { label: 'Tarifa única (6 horas con jacuzzi)', price: '$160.000' }
+      ],
+      momentoRapido: [],
+      horarios: 'Estancia de 6 horas en el horario de tu preferencia (sujeto a disponibilidad).',
+      nota: '💦 Jacuzzi privado incluido durante toda la estancia.'
+    }
+  },
+  {
+    id: 3,
+    title: 'Momento Rápido',
+    location: 'El Retiro · Antioquia',
+    rating: 5.0,
+    reviews: 56,
+    category: 'Express',
+    price: '$100.000',
+    priceUnit: '/ 3 horas',
+    tags: ['3 Horas', 'Desconexión', 'Opcional Jacuzzi'],
+    img: fotoGlam3,
+    details: {
+      ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
+      incluye: [
+        'Cama doble cómoda',
+        'Baño privado con agua caliente',
+        'Privacidad garantizada'
+      ],
+      tarifasParejas: [],
+      hasta4Personas: [],
+      estanciaOcasional: [],
+      momentoRapido: [
+        { label: 'Tarifa con jacuzzi (3 horas)', price: '$120.000' },
+        { label: 'Tarifa sin jacuzzi (3 horas)', price: '$100.000' }
+      ],
+      horarios: 'Estancia de 3 horas (sujeto a disponibilidad).',
+      nota: 'Personaliza tu experiencia añadiendo o no el jacuzzi.'
+    }
+  }
+];
+
+const SERVICES = [
+  {
+    id: 1,
+    title: 'Noche Romántica',
+    description: 'Decoración especial con pétalos, velas y un ambiente lleno de amor para sorprender a tu pareja.',
+    img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=85',
+    price: 'Consultar tarifa',
+  },
+  {
+    id: 2,
+    title: 'Aniversario',
+    description: 'Celebra esa fecha especial con detalles únicos, vino y la mejor atención para que sea inolvidable.',
+    img: 'https://images.unsplash.com/photo-1522067713437-142340b10be5?auto=format&fit=crop&w=800&q=85',
+    price: 'Consultar tarifa',
+  },
+  {
+    id: 3,
+    title: 'Cumpleaños',
+    description: 'Una decoración festiva con globos, pastel y mucha alegría para festejar rodeados de naturaleza.',
+    img: 'https://images.unsplash.com/photo-1530103862676-de3c9de59a9e?auto=format&fit=crop&w=800&q=85',
+    price: 'Consultar tarifa',
   }
 ];
 
@@ -60,6 +170,7 @@ function ChevronDown() {
 
 function App() {
   const [activeTab, setActiveTab] = useState('Alojamientos');
+  const [selectedListing, setSelectedListing] = useState<typeof LISTINGS[0] | null>(null);
   const [openDropdown, setOpenDropdown] = useState<'checkin' | 'checkout' | 'guests' | null>(null);
   const [checkInDate, setCheckInDate] = useState(new Date(2026, 5, 7));
   const [checkOutDate, setCheckOutDate] = useState(new Date(2026, 5, 8));
@@ -289,8 +400,8 @@ function App() {
       <main className="main">
         <div className="main-inner">
           <div className="listings-head">
-            <h2 className="listings-title">Conoce nuestros alojamientos</h2>
-            <p className="listings-sub">Disfruta de la naturaleza en El Retiro con todas las comodidades de un hotel cinco estrellas.</p>
+            <h2 className="listings-title">Nuestros Planes</h2>
+            <p className="listings-sub">Descubre los alojamientos y planes que tenemos para que disfrutes de Glamping Lubito.</p>
           </div>
 
           <div className="cards-grid">
@@ -318,15 +429,48 @@ function App() {
                   </div>
                   <div className="card-foot">
                     <div>
-                      <span className="card-price">{item.price} COP</span>
-                      <span className="card-night"> / noche</span>
+                      <span className="card-price">Desde {item.price}</span>
+                      <span className="card-night"> {item.priceUnit}</span>
                     </div>
-                    <button type="button" className="card-cta">Reservar</button>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button type="button" className="card-cta-outline" onClick={() => setSelectedListing(item)}>Ver Tarifas</button>
+                      <button type="button" className="card-cta">Reservar</button>
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
           </div>
+
+          {/* ── SERVICIOS ADICIONALES ── */}
+          <div className="listings-head" style={{ marginTop: '80px' }}>
+            <h2 className="listings-title">Servicios Adicionales</h2>
+            <p className="listings-sub">Servicios totalmente independientes de los planes, pensados para hacer tu estadía aún más especial.</p>
+          </div>
+
+          <div className="cards-grid">
+            {SERVICES.map(svc => (
+              <article key={svc.id} className="card">
+                <div className="card-img-wrap">
+                  <img src={svc.img} alt={svc.title} className="card-img" loading="lazy" />
+                  <span className="card-badge">✨ Adicional</span>
+                </div>
+                <div className="card-body">
+                  <h3 className="card-title">{svc.title}</h3>
+                  <p style={{ color: '#6b7280', fontSize: '14.5px', lineHeight: '1.5', flex: 1, marginBottom: '24px' }}>
+                    {svc.description}
+                  </p>
+                  <div className="card-foot">
+                    <div>
+                      <span className="card-price" style={{ fontSize: '17px' }}>{svc.price}</span>
+                    </div>
+                    <button type="button" className="card-cta-outline">Añadir</button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
         </div>
       </main>
 
@@ -337,6 +481,97 @@ function App() {
           <span className="footer-copy">© {new Date().getFullYear()} Glamping Lubito · El Retiro, Antioquia, Colombia</span>
         </div>
       </footer>
+
+      {/* ── MODAL DETALLES ── */}
+      {selectedListing && (
+        <div className="modal-overlay" onClick={() => setSelectedListing(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedListing(null)}>✕</button>
+            
+            <div className="modal-header">
+              <h3 className="modal-title">{selectedListing.title} - Tarifas 2026</h3>
+              <div className="modal-subtitle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {selectedListing.details?.ubicacion}
+              </div>
+            </div>
+
+            <div className="modal-body">
+              {selectedListing.details && (
+                <>
+                  {selectedListing.details.incluye.length > 0 && (
+                    <div className="modal-section">
+                      <h4 className="modal-section-title">🛖 El alojamiento incluye</h4>
+                      <ul className="modal-list">
+                        {selectedListing.details.incluye.map((inc, i) => (
+                          <li key={i}>{inc}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedListing.details.tarifasParejas.length > 0 && (
+                    <div className="modal-section">
+                      <h4 className="modal-section-title">💰 Tarifas Parejas</h4>
+                      {selectedListing.details.tarifasParejas.map((t, i) => (
+                        <div key={i} className="price-row">
+                          <span className="price-label">{t.label}</span>
+                          <span className="price-val">{t.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedListing.details.hasta4Personas.length > 0 && (
+                    <div className="modal-section">
+                      <h4 className="modal-section-title">👨‍👩‍👧‍👦 Hasta 4 personas</h4>
+                      {selectedListing.details.hasta4Personas.map((t, i) => (
+                        <div key={i} className="price-row">
+                          <span className="price-label">{t.label}</span>
+                          <span className="price-val">{t.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedListing.details.estanciaOcasional.length > 0 && (
+                    <div className="modal-section">
+                      <h4 className="modal-section-title">⏰ Estancia ocasional (6 horas)</h4>
+                      {selectedListing.details.estanciaOcasional.map((t, i) => (
+                        <div key={i} className="price-row">
+                          <span className="price-label">{t.label}</span>
+                          <span className="price-val">{t.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedListing.details.momentoRapido.length > 0 && (
+                    <div className="modal-section">
+                      <h4 className="modal-section-title">⚡ Momento rápido (3 horas)</h4>
+                      {selectedListing.details.momentoRapido.map((t, i) => (
+                        <div key={i} className="price-row">
+                          <span className="price-label">{t.label}</span>
+                          <span className="price-val">{t.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="modal-info-box">
+                    <div className="modal-info-text">🕒 {selectedListing.details.horarios}</div>
+                    {selectedListing.details.nota && (
+                      <div className="modal-info-text">{selectedListing.details.nota}</div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
