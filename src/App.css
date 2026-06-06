@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #fdfbf7; /* Light warm background for a natural feel */
+  background: #CFC5B6; /* Slightly darker earthy beige */
 }
 
 /* ══════════════
@@ -140,7 +140,7 @@
    TABS BAR
 ══════════════ */
 .tabs-bar {
-  background: #402707; /* User's brown */
+  background: #10331A; /* Elegant dark green instead of brown */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -678,7 +678,7 @@
    FOOTER
 ══════════════ */
 .footer {
-  background: #402707;
+  background: #10331A;
   padding: 32px 24px;
   color: rgba(255,255,255,0.7);
   text-align: center;

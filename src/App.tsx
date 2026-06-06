@@ -3,6 +3,15 @@ import './App.css';
 import fotoGlam1 from './assets/foto-glam1.jpeg';
 import fotoGlam2 from './assets/foto-glam2.jpeg';
 import fotoGlam3 from './assets/foto-glam3.jpeg';
+import decoAmor1 from './assets/deco-amor1.jpeg';
+import decoAmor2 from './assets/deco-amor2.jpeg';
+import decoCumple1 from './assets/deco-cumple1.jpeg';
+import decoCumple2 from './assets/deco-cumple2.jpeg';
+import decoCumple3 from './assets/deco-cumple3.jpeg';
+import decoAmor3 from './assets/deco-amor3.jpeg';
+import decoAmor4 from './assets/deco-amor4.jpeg';
+import decoAmor5 from './assets/deco-amor5.jpeg';
+import decoAmor6 from './assets/deco-amor6.jpeg';
 
 interface GuestState {
   rooms: number;
@@ -11,8 +20,7 @@ interface GuestState {
 }
 
 const TABS = [
-  { id: 'Alojamientos', label: 'Nuestros Domos' },
-  { id: 'Servicios', label: 'Servicios' },
+  { id: 'Inicio', label: 'Inicio' },
   { id: 'Ubicacion', label: 'Ubicación' },
   { id: 'Contacto', label: 'Contacto' },
 ];
@@ -29,6 +37,7 @@ const LISTINGS = [
     priceUnit: '/ noche',
     tags: ['Jacuzzi Privado', 'Cocina', 'Zona BBQ', 'Pet Friendly 🐾'],
     img: fotoGlam1,
+    images: [fotoGlam1, fotoGlam2, fotoGlam3],
     details: {
       ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
       incluye: [
@@ -65,6 +74,7 @@ const LISTINGS = [
     priceUnit: '/ 6 horas',
     tags: ['Jacuzzi Incluido', '6 Horas', 'Relajación Total', 'Privacidad'],
     img: fotoGlam2,
+    images: [fotoGlam2, fotoGlam3, fotoGlam1],
     details: {
       ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
       incluye: [
@@ -94,6 +104,7 @@ const LISTINGS = [
     priceUnit: '/ 3 horas',
     tags: ['3 Horas', 'Desconexión', 'Opcional Jacuzzi'],
     img: fotoGlam3,
+    images: [fotoGlam3, fotoGlam1, fotoGlam2],
     details: {
       ubicacion: 'Vereda Lejos del Nido, Retiro – Antioquia. A 20 minutos del Retiro y 20 minutos de La Ceja.',
       incluye: [
@@ -119,21 +130,24 @@ const SERVICES = [
     id: 1,
     title: 'Noche Romántica',
     description: 'Decoración especial con pétalos, velas y un ambiente lleno de amor para sorprender a tu pareja.',
-    img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=85',
+    img: decoAmor1,
+    images: [decoAmor1, decoAmor2, decoAmor3, decoAmor4],
     price: 'Consultar tarifa',
   },
   {
     id: 2,
     title: 'Aniversario',
     description: 'Celebra esa fecha especial con detalles únicos, vino y la mejor atención para que sea inolvidable.',
-    img: 'https://images.unsplash.com/photo-1522067713437-142340b10be5?auto=format&fit=crop&w=800&q=85',
+    img: decoAmor2,
+    images: [decoAmor2, decoAmor5, decoAmor6, decoAmor1],
     price: 'Consultar tarifa',
   },
   {
     id: 3,
     title: 'Cumpleaños',
     description: 'Una decoración festiva con globos, pastel y mucha alegría para festejar rodeados de naturaleza.',
-    img: 'https://images.unsplash.com/photo-1530103862676-de3c9de59a9e?auto=format&fit=crop&w=800&q=85',
+    img: decoCumple1,
+    images: [decoCumple1, decoCumple2, decoCumple3],
     price: 'Consultar tarifa',
   }
 ];
@@ -169,8 +183,17 @@ function ChevronDown() {
 }
 
 function App() {
-  const [activeTab, setActiveTab] = useState('Alojamientos');
+  const [activeTab, setActiveTab] = useState('Inicio');
   const [selectedListing, setSelectedListing] = useState<typeof LISTINGS[0] | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<string[] | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
+  const openGallery = (imgs: string[]) => {
+    if (imgs && imgs.length > 0) {
+      setSelectedGallery(imgs);
+      setGalleryIndex(0);
+    }
+  };
   const [openDropdown, setOpenDropdown] = useState<'checkin' | 'checkout' | 'guests' | null>(null);
   const [checkInDate, setCheckInDate] = useState(new Date(2026, 5, 7));
   const [checkOutDate, setCheckOutDate] = useState(new Date(2026, 5, 8));
@@ -282,8 +305,9 @@ function App() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="hero">
-        <div className="hero-bg" />
+      {activeTab === 'Inicio' && (
+        <section className="hero">
+          <div className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-content">
           <div className="search-card" ref={dropdownRef}>
@@ -395,81 +419,137 @@ function App() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── LISTINGS ── */}
       <main className="main">
         <div className="main-inner">
-          <div className="listings-head">
-            <h2 className="listings-title">Nuestros Planes</h2>
-            <p className="listings-sub">Descubre los alojamientos y planes que tenemos para que disfrutes de Glamping Lubito.</p>
-          </div>
+          {activeTab === 'Inicio' && (
+            <>
+              <div className="listings-head">
+                <h2 className="listings-title">Nuestros Planes</h2>
+                <p className="listings-sub">Descubre los alojamientos y planes que tenemos para que disfrutes de Glamping Lubito.</p>
+              </div>
 
-          <div className="cards-grid">
-            {LISTINGS.map(item => (
-              <article key={item.id} className="card">
-                <div className="card-img-wrap">
-                  <img src={item.img} alt={item.title} className="card-img" loading="lazy" />
-                  <span className="card-badge">★ {item.category}</span>
-                </div>
-                <div className="card-body">
-                  <div className="card-rating">
-                    <span className="rating-pill">{item.rating.toFixed(1)}</span>
-                    <span className="rating-label">{item.category}</span>
-                    <span className="rating-count">{item.reviews} opiniones</span>
-                  </div>
-                  <h3 className="card-title">{item.title}</h3>
-                  <p className="card-loc">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
-                    {item.location}
+              <div className="cards-grid">
+                {LISTINGS.map(item => (
+                  <article key={item.id} className="card">
+                    <div className="card-img-wrap">
+                      <img src={item.img} alt={item.title} className="card-img" loading="lazy" style={{ cursor: 'pointer' }} onClick={() => openGallery(item.images)} />
+                      <span className="card-badge">★ {item.category}</span>
+                    </div>
+                    <div className="card-body">
+                      <div className="card-rating">
+                        <span className="rating-pill">{item.rating.toFixed(1)}</span>
+                        <span className="rating-label">{item.category}</span>
+                        <span className="rating-count">{item.reviews} opiniones</span>
+                      </div>
+                      <h3 className="card-title">{item.title}</h3>
+                      <p className="card-loc">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        {item.location}
+                      </p>
+                      <div className="card-tags">
+                        {item.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                      </div>
+                      <div className="card-foot">
+                        <div>
+                          <span className="card-price">Desde {item.price}</span>
+                          <span className="card-night"> {item.priceUnit}</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button type="button" className="card-cta-outline" onClick={() => setSelectedListing(item)}>Ver Tarifas</button>
+                          <button type="button" className="card-cta">Reservar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* ── SERVICIOS ADICIONALES ── */}
+              <div className="listings-head" style={{ marginTop: '80px' }}>
+                <h2 className="listings-title">Servicios Adicionales</h2>
+                <p className="listings-sub">Servicios totalmente independientes de los planes, pensados para hacer tu estadía aún más especial.</p>
+              </div>
+
+              <div className="cards-grid">
+                {SERVICES.map(svc => (
+                  <article key={svc.id} className="card">
+                    <div className="card-img-wrap">
+                      <img src={svc.img} alt={svc.title} className="card-img" loading="lazy" style={{ cursor: 'pointer' }} onClick={() => openGallery(svc.images)} />
+                      <span className="card-badge">✨ Adicional</span>
+                    </div>
+                    <div className="card-body">
+                      <h3 className="card-title">{svc.title}</h3>
+                      <p style={{ color: '#6b7280', fontSize: '14.5px', lineHeight: '1.5', flex: 1, marginBottom: '24px' }}>
+                        {svc.description}
+                      </p>
+                      <div className="card-foot">
+                        <div>
+                          <span className="card-price" style={{ fontSize: '17px' }}>{svc.price}</span>
+                        </div>
+                        <button type="button" className="card-cta-outline">Añadir</button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
+
+          {activeTab === 'Ubicacion' && (
+            <div className="location-section">
+              <div className="listings-head">
+                <h2 className="listings-title">Ubicación</h2>
+                <p className="listings-sub">Descubre cómo llegar a nuestro oasis de tranquilidad.</p>
+              </div>
+              <div className="contact-grid" style={{ display: 'grid', gap: '24px' }}>
+                <div className="contact-card" style={{ background: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                  <p style={{ marginBottom: '16px', color: '#374151', fontSize: '16px', lineHeight: '1.6' }}>
+                    <strong>📍 Dirección:</strong> Vereda Lejos del Nido, Retiro – Antioquia.<br/><br/>
+                    Nos encontramos a tan solo 20 minutos de El Retiro y 20 minutos de La Ceja. El acceso es apto para cualquier tipo de vehículo.
                   </p>
-                  <div className="card-tags">
-                    {item.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                  </div>
-                  <div className="card-foot">
-                    <div>
-                      <span className="card-price">Desde {item.price}</span>
-                      <span className="card-night"> {item.priceUnit}</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button type="button" className="card-cta-outline" onClick={() => setSelectedListing(item)}>Ver Tarifas</button>
-                      <button type="button" className="card-cta">Reservar</button>
-                    </div>
+                  <div style={{ width: '100%', height: '400px', backgroundColor: '#f3f4f6', borderRadius: '12px', overflow: 'hidden' }}>
+                    <iframe 
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.702967664673!2d-75.467885!3d6.061805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e469904d60a5e8f%3A0xc39f2010c7b645b2!2sEl%20Retiro%2C%20Antioquia!5e0!3m2!1sen!2sco!4v1700000000000" 
+                      width="100%" 
+                      height="100%" 
+                      style={{ border: 0 }} 
+                      allowFullScreen 
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade">
+                    </iframe>
                   </div>
                 </div>
-              </article>
-            ))}
-          </div>
+              </div>
+            </div>
+          )}
 
-          {/* ── SERVICIOS ADICIONALES ── */}
-          <div className="listings-head" style={{ marginTop: '80px' }}>
-            <h2 className="listings-title">Servicios Adicionales</h2>
-            <p className="listings-sub">Servicios totalmente independientes de los planes, pensados para hacer tu estadía aún más especial.</p>
-          </div>
-
-          <div className="cards-grid">
-            {SERVICES.map(svc => (
-              <article key={svc.id} className="card">
-                <div className="card-img-wrap">
-                  <img src={svc.img} alt={svc.title} className="card-img" loading="lazy" />
-                  <span className="card-badge">✨ Adicional</span>
+          {activeTab === 'Contacto' && (
+            <div className="contact-section">
+              <div className="listings-head">
+                <h2 className="listings-title">Contacto</h2>
+                <p className="listings-sub">¿Tienes alguna duda o quieres hacer una reserva especial? Contáctanos.</p>
+              </div>
+              <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+                <div className="contact-card" style={{ background: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '40px', marginBottom: '16px' }}>📱</div>
+                  <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>WhatsApp</h3>
+                  <p style={{ color: '#6b7280', marginBottom: '24px' }}>Escríbenos para una atención más rápida y personalizada.</p>
+                  <a href="https://wa.me/573000000000" target="_blank" rel="noreferrer" style={{ display: 'inline-block', backgroundColor: '#25D366', color: '#fff', padding: '12px 28px', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', transition: 'all 0.2s ease' }}>Enviar Mensaje</a>
                 </div>
-                <div className="card-body">
-                  <h3 className="card-title">{svc.title}</h3>
-                  <p style={{ color: '#6b7280', fontSize: '14.5px', lineHeight: '1.5', flex: 1, marginBottom: '24px' }}>
-                    {svc.description}
-                  </p>
-                  <div className="card-foot">
-                    <div>
-                      <span className="card-price" style={{ fontSize: '17px' }}>{svc.price}</span>
-                    </div>
-                    <button type="button" className="card-cta-outline">Añadir</button>
-                  </div>
+                <div className="contact-card" style={{ background: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '40px', marginBottom: '16px' }}>📸</div>
+                  <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>Instagram</h3>
+                  <p style={{ color: '#6b7280', marginBottom: '24px' }}>Síguenos para ver fotos, videos y promociones.</p>
+                  <a href="https://instagram.com/lubito_2" target="_blank" rel="noreferrer" style={{ display: 'inline-block', backgroundColor: '#E1306C', color: '#fff', padding: '12px 28px', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', transition: 'all 0.2s ease' }}>@lubito_2</a>
                 </div>
-              </article>
-            ))}
-          </div>
+              </div>
+            </div>
+          )}
 
         </div>
       </main>
@@ -481,6 +561,23 @@ function App() {
           <span className="footer-copy">© {new Date().getFullYear()} Glamping Lubito · El Retiro, Antioquia, Colombia</span>
         </div>
       </footer>
+
+      {/* ── GALLERY MODAL ── */}
+      {selectedGallery && (
+        <div className="modal-overlay" style={{ background: 'rgba(0,0,0,0.95)', zIndex: 2000 }} onClick={() => setSelectedGallery(null)}>
+          <button className="modal-close" style={{ top: '20px', right: '20px', background: 'rgba(255,255,255,0.1)', color: '#fff' }} onClick={() => setSelectedGallery(null)}>✕</button>
+          
+          <button className="modal-close" style={{ top: '50%', left: '20px', background: 'rgba(255,255,255,0.1)', color: '#fff', transform: 'translateY(-50%)' }} onClick={(e) => { e.stopPropagation(); setGalleryIndex(prev => prev === 0 ? selectedGallery.length - 1 : prev - 1); }}>‹</button>
+
+          <img src={selectedGallery[galleryIndex]} alt="Gallery" style={{ maxHeight: '85vh', maxWidth: '85vw', objectFit: 'contain', borderRadius: '12px', userSelect: 'none' }} onClick={e => e.stopPropagation()} />
+
+          <button className="modal-close" style={{ top: '50%', right: '20px', background: 'rgba(255,255,255,0.1)', color: '#fff', transform: 'translateY(-50%)' }} onClick={(e) => { e.stopPropagation(); setGalleryIndex(prev => prev === selectedGallery.length - 1 ? 0 : prev + 1); }}>›</button>
+
+          <div style={{ position: 'absolute', bottom: '24px', color: '#fff', fontWeight: 600, fontSize: '16px', letterSpacing: '2px' }}>
+            {galleryIndex + 1} / {selectedGallery.length}
+          </div>
+        </div>
+      )}
 
       {/* ── MODAL DETALLES ── */}
       {selectedListing && (
