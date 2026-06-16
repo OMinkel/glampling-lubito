@@ -24,11 +24,11 @@ export default function Home() {
                         <Link to="/reservas" className="btn-primary">Reservar ahora</Link>
                         <Link to="/planes" className="btn-secondary">Ver planes</Link>
                     </div>
+                </div>
 
-                    <div className="scroll">
-                        <span className="scroll-label">DESLIZA</span>
-                        <div className="scroll-line"></div>
-                    </div>
+                <div className="scroll">
+                    <span className="scroll-label">DESLIZA</span>
+                    <i className="fa-solid fa-chevron-down scroll-arrow"></i>
                 </div>
             </section>
 

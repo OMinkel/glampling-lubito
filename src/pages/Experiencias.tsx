@@ -1,6 +1,23 @@
+import { useState } from 'react';
 import '../styles/experiencias.css';
 
 export default function Experiencias() {
+    const [selectedImg, setSelectedImg] = useState<string | null>(null);
+
+    const images = [
+        "/Experiencias/IMG/1.jpeg",
+        "/Experiencias/IMG/2.jpg",
+        "/Experiencias/IMG/3.jpeg",
+        "/Experiencias/IMG/4.jpeg",
+        "/Experiencias/IMG/5.jpeg",
+        "/Experiencias/IMG/6.jpeg",
+        "/Experiencias/IMG/7.jpeg",
+        "/Experiencias/IMG/8.jpeg"
+    ];
+
+    const openModal = (src: string) => setSelectedImg(src);
+    const closeModal = () => setSelectedImg(null);
+
     return (
         <main>
             <section className="hero" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.70)), url("/Experiencias/IMG/Fondo.jpeg")' }}>
@@ -16,29 +33,28 @@ export default function Experiencias() {
 
             <section className="collage-wrapper">
                 <div className="collage">
-                    {[
-                        { src: "/Experiencias/IMG/1.jpeg", alt: "Glamping lubito", label: "Glamping lubito" },
-                        { src: "/Experiencias/IMG/2.jpg", alt: "Fogata", label: "Fogata" },
-                        { src: "/Experiencias/IMG/3.jpeg", alt: "Jacuzzi", label: "Jacuzzi" },
-                        { src: "/Experiencias/IMG/4.jpeg", alt: "Naturaleza", label: "Naturaleza" },
-                        { src: "/Experiencias/IMG/5.jpeg", alt: "Fogón", label: "Fogón" },
-                        { src: "/Experiencias/IMG/6.jpeg", alt: "Cielo", label: "Cielo" },
-                        { src: "/Experiencias/IMG/7.jpeg", alt: "Desayuno", label: "Desayuno" },
-                        { src: "/Experiencias/IMG/8.jpeg", alt: "Jardín", label: "Jardín" }
-                    ].map((img, i) => (
-                        <div className="collage-item" key={i}>
+                    {images.map((src, i) => (
+                        <div className="collage-item" key={i} onClick={() => openModal(src)}>
                             <div className="collage-placeholder">
-                                <svg width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" />
-                                    <path d="M21 15l-5-5L5 21" />
-                                </svg>
-                                <img src={img.src} alt={img.alt} />
+                                <img src={src} alt={`Experiencia ${i + 1}`} loading="lazy" />
+                                <div className="zoom-icon">
+                                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                                </div>
                             </div>
-                            <span className="collage-label">{img.label}</span>
                         </div>
                     ))}
                 </div>
             </section>
+
+            {/* LIGHTBOX MODAL */}
+            {selectedImg && (
+                <div className="lightbox" onClick={closeModal}>
+                    <div className="lightbox-close" onClick={closeModal}>
+                        <i className="fa-solid fa-xmark"></i>
+                    </div>
+                    <img src={selectedImg} alt="Experiencia expandida" className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+                </div>
+            )}
 
             <section className="llegar-section">
                 <div className="llegar-inner">
@@ -64,28 +80,28 @@ export default function Experiencias() {
 
                         <div className="llegar-info">
                             <div className="llegar-item">
-                                <div className="llegar-icon">📍</div>
+                                <div className="llegar-icon"><i className="fa-solid fa-location-dot"></i></div>
                                 <div>
                                     <p className="llegar-item-title">Dirección</p>
                                     <p className="llegar-item-desc">Vereda Lejos del Nido, Retiro, Antioquia, Colombia</p>
                                 </div>
                             </div>
                             <div className="llegar-item">
-                                <div className="llegar-icon">🚗</div>
+                                <div className="llegar-icon"><i className="fa-solid fa-car"></i></div>
                                 <div>
                                     <p className="llegar-item-title">Desde Medellín</p>
                                     <p className="llegar-item-desc">~40 minutos por la vía Las Palmas. Ruta señalizada desde el peaje.</p>
                                 </div>
                             </div>
                             <div className="llegar-item">
-                                <div className="llegar-icon">🚌</div>
+                                <div className="llegar-icon"><i className="fa-solid fa-bus"></i></div>
                                 <div>
                                     <p className="llegar-item-title">Transporte público</p>
                                     <p className="llegar-item-desc">Bus desde Terminal del Sur hacia Retiro. Avisanos y coordinamos recogida.</p>
                                 </div>
                             </div>
                             <div className="llegar-item">
-                                <div className="llegar-icon">📱</div>
+                                <div className="llegar-icon"><i className="fa-brands fa-whatsapp"></i></div>
                                 <div>
                                     <p className="llegar-item-title">¿Te perdiste?</p>
                                     <p className="llegar-item-desc">Escríbenos por WhatsApp y te guiamos en tiempo real.</p>
